@@ -8,6 +8,7 @@ Link to paper:
 
 ## Repository Structure 
 
+```bash
 ├── src/                # Core analysis code
 │   ├── preprocessing/  # Neural data preprocessing
 │   ├── analysis/       # Subspace identification and decoding
@@ -22,6 +23,7 @@ Link to paper:
 │
 ├── requirements.txt    # Python dependencies
 └── README.md
+```
 
 ## Data Availability 
 
