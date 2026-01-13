@@ -1,6 +1,6 @@
 ## PFC-M1 Communication Subspace 
 
-This repository contains code related to the paper: 
+This repository contains code for the following paper: 
 **" A Communication Subspace Relays Context-dependent Actions from Human Prefrontal to Motor Cortex "**
 *Neha Binish, Jonas Terlau, Jan Martini, Jack J. Lin , Robert T. Knight, Randolph F. Helfrich*, *Nature Neuroscience*, *2026*
 
@@ -35,3 +35,11 @@ Clone the repository and install dependencies:
 git clone git@github.com:nehabinish/pfc-m1-communication-subspace.git
 cd pfc-m1-communication-subspace
 pip install -r requirements.txt
+```
+
+## Contact
+
+For questions or issues, please contact:
+
+Neha Binish - neha.binish@uni-tuebingen.de
+Randolph Helfrich - randolph.helfrich@yale.edu
