@@ -43,5 +43,4 @@ pip install -r requirements.txt
 
 For questions or issues, please contact:
 
-Neha Binish - neha.binish@uni-tuebingen.de
-Randolph Helfrich - randolph.helfrich@yale.edu
+Neha Binish - neha.binish@uni-tuebingen.de or Randolph Helfrich - randolph.helfrich@yale.edu
