@@ -1,11 +1,12 @@
 """
 Title: Variable Initialization and Visualization Parameters
-Author: @nehabinish
-Date: 15/11/2023 | 15:32:00
-Updated: 16/09/2024
+Author: @nehabinish0
+Created: 15/11/2023
 """
 
-#%% ==                                                               Variable Initialisation                                                                ==
+# -----------------------------------------------------------------------------
+    # Initialization of variables for analysis and visualization
+# ------------------------------------------------------------------------------
 
 # Task labels for different context functions 
 context = ['Predictive', 'Random']

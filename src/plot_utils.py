@@ -48,7 +48,7 @@ def apply_plot_style(style_path=None):
 # ---------------------------------------------------------------------
 # Plot neural data
 # ---------------------------------------------------------------------    
-def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="time"):
+def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="time", region_colours=None):
     """
     Plot the mean and SEM of example neural data for specified brain regions.
 
@@ -60,7 +60,7 @@ def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="ti
         fig (matplotlib.figure.Figure): Figure to plot on. If None, a new figure is created.
         regions (tuple): Names of regions to plot. Defaults to ('R1', 'R2').
         time_key (str): Key for the time vector in `data`. Defaults to 'time'.
-
+        region_colours (dict or None): Optional dictionary mapping region names to colors.
     Returns:
         None
     """
@@ -78,12 +78,15 @@ def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="ti
         # Compute SEM (standard error of mean across channels)
         sem_signal = np.std(np.mean(data[region], axis=0), axis=0) / np.sqrt(data[region].shape[1])
 
+        # Determine color
+        colors = region_colours if region_colours else None
+
         # Plot mean trace
-        ax.plot(data[time_key], mean_signal, label=region, linewidth=2)
+        ax.plot(data[time_key], mean_signal, label=region, linewidth=2, color=colors[region] if colors else None)
 
         # Shade SEM
         ax.fill_between(data[time_key], mean_signal - sem_signal, mean_signal + sem_signal,
-                        alpha=0.3)
+                        alpha=0.3, color=colors[region] if colors else None)
 
     ax.set_xlabel("Time [s]")
     ax.set_ylabel("HFA [z]")
