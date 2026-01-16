@@ -1,0 +1,44 @@
+###############################################################################
+# Custom Matplotlib Style Configuration
+#
+# Author: @nehabinish
+# Created: 10/12/2023 
+#
+# Description:
+# Clean, minimalist Matplotlib style for visualizations.
+###############################################################################
+
+# =========================
+# Font settings
+# =========================
+font.family: Arial
+font.size: 12
+font.weight: 800
+
+# =========================
+# Axes & ticks
+# =========================
+axes.linewidth: 1.0
+
+xtick.major.size: 3
+ytick.major.size: 3
+
+axes.labelsize: 14
+xtick.labelsize: 12
+ytick.labelsize: 12
+
+# =========================
+# Line settings
+# =========================
+lines.linewidth: 2
+
+# =========================
+# Figure settings
+# =========================
+figure.figsize: 5, 3
+
+# =========================
+# Spines (minimalist look)
+# =========================
+axes.spines.top: False
+axes.spines.right: False
