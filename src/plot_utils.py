@@ -74,16 +74,15 @@ def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="ti
 
         # Compute mean across trials and channels
         mean_signal = np.mean(data[region], axis=(0, 1))
-
         # Compute SEM (standard error of mean across channels)
         sem_signal = np.std(np.mean(data[region], axis=0), axis=0) / np.sqrt(data[region].shape[1])
-
         # Determine color
         colors = region_colours if region_colours else None
-
         # Plot mean trace
         ax.plot(data[time_key], mean_signal, label=region, linewidth=2, color=colors[region] if colors else None)
-
+        ax.axvline(0, color='gray', linestyle='--', linewidth=1)
+        # Add text annotations for task events
+        ax.text(0.5, 0.88, 'Target', transform=ax.transAxes, fontsize=10, fontweight='medium', color='grey')
         # Shade SEM
         ax.fill_between(data[time_key], mean_signal - sem_signal, mean_signal + sem_signal,
                         alpha=0.3, color=colors[region] if colors else None)
@@ -201,3 +200,49 @@ def plot_kde(
 
     plt.tight_layout()
     return fig
+
+# ---------------------------------------------------------------------
+# Communication subspace plotting
+# ---------------------------------------------------------------------
+def plot_xy_communication_subspace(XY_metrics, XY_numdims, xy_opt_dim, title='XY Communication Subspace'):
+    """
+    Plots predictive performance with error bars and optimal dimensions (XY only).
+
+    Args:
+        XY_metrics (dict): Output from compute_performance() for XY.
+            Expected keys: 'mean_cv', 'sem_cv', 'performance_full', 'error_full'
+        XY_numdims (np.ndarray or list): Tested number of predictive dimensions.
+        xy_opt_dim (int): Optimal number of dimensions to indicate with vertical line.
+        title (str, optional): Plot title.
+    """
+    # Apply a consistent plotting style
+    apply_plot_style()
+    plt.figure()
+
+    # XY performance curve
+    plt.errorbar(
+        XY_numdims,
+        1 - XY_metrics['mean_cv'],
+        yerr=XY_metrics['sem_cv'],
+        fmt='o-', markersize=4, capsize=2, color='#752D72',
+        label='XY subspace'
+    )
+
+    # Mark optimal number of dimensions
+    plt.axvline(x=xy_opt_dim, color='#752D72', linestyle='--', label='Estimated optimal dim')
+
+    # Full model performance marker
+    plt.errorbar(
+        -0.5,  # Offset on x-axis
+        XY_metrics['performance_full'],
+        yerr=XY_metrics['error_full'],
+        fmt='^', markersize=6, capsize=2, color='#752D72',
+        label='Full model'
+    )
+
+    plt.xlabel('Number of predictive dimensions')
+    plt.ylabel('Predictive performance')
+    plt.title(title)
+    plt.legend()
+    plt.tight_layout()
+    plt.show()

@@ -10,24 +10,16 @@ Link to paper:
 
 ```bash
 ├── src/                # Core analysis code
-│   ├── preprocessing/  # Neural data preprocessing
-│   ├── analysis/       # Subspace identification and decoding
-│   ├── models/         # Dimensionality reduction and decoding models
-│   └── utils/          # Helper functions
-│
 ├── scripts/            # Executable scripts to reproduce analyses
-│
+├── docs/               # Additional docs
 ├── data/               # Data directory (see note below)
-│   ├── example_data/
-│   └── results/
-│
 ├── requirements.txt    # Python dependencies
 └── README.md
 ```
 
 ## Data Availability 
 
-"TBH"
+"TBD"
 
 ## Installation 
 

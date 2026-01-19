@@ -331,8 +331,9 @@ class FactorAnalysis:
             parallel (bool): Switch to parallel processing.
 
         Returns:
-            cvLoss: Cumulative shared variance explained by the latent dimensions.
-            cvLogLike: Cross-validated log-likelihood.
+            cvLoss (np.ndarray): Cumulative shared variance explained by the latent dimensions.
+            cvLogLike (np.ndarray): Cross-validated log-likelihood.
+            explained_variance (np.ndarray): Fraction of explained variance for each latent dimension.
         """
 
         # Latent dimensions to test
