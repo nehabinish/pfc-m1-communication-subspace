@@ -7,6 +7,7 @@ Description:
 Plotting utilities for demo analysis.
 """
 
+from ast import In
 from pathlib import Path
 import numpy as np
 import pandas as pd
@@ -97,120 +98,83 @@ def plot_neural_data(data, ax=None, fig=None, regions=("R1", "R2"), time_key="ti
 
 
 # ---------------------------------------------------------------------
-# KDE + boxplot visualization
+# Cumulative variance plotting
 # ---------------------------------------------------------------------
-def plot_kde(
-    plot_data,
-    ax=None, 
-    fig=None,
-    *,
-    bxplt=True,
-    plt_colors=None,
-    title=None,
-    xlabel=None,
-    ylabel=None,
-):
+def plot_cumulative_explained_variance(Results, dimsR1, dimsR2, fig=None, ax=None, roi_colours=None, n_dims=10):
     """
-    Plot KDE distributions with optional boxplots and statistics.
+    Plot cumulative explained variance with SEM and mean latent dimensionality.
 
     Args:
-        plot_data (dict): {condition: array-like}
-        ax (matplotlib.axes.Axes): Axis to plot on. If None, a new figure and axis are created.
-        fig (matplotlib.figure.Figure): Figure to plot on. If None, a new
-        bxplt (bool): Add boxplot above KDE
-        plt_colors (dict): {condition: color}
-        title, xlabel, ylabel (str): Axis labels
-    Returns:
-        None
+        fig (matplotlib.figure.Figure): Figure to plot on. If None, a new figure is created.
+        ax (matplotlib.axes.Axes): Axis to plot on. If None, a new axis is created.
+        Results (dict): Should contain 'R1' and 'R2' with 'expvar' arrays.
+        dimsR1 (array-like): Estimated latent dimensions for R1.
+        dimsR2 (array-like): Estimated latent dimensions for R2.
+        roi_colours (dict): Must have 'R1' and 'R2' colors.
+        n_dims (int): Number of latent dimensions to plot (default 10).
     """
 
-    if ax is None:
+    # Check if fig and ax are provided
+    if fig is None or ax is None:
         apply_plot_style()
         fig, ax = plt.subplots()
 
-    if not isinstance(plot_data, dict) or len(plot_data) == 0:
-        raise ValueError("plot_data must be a non-empty dictionary")
+    # Default ROI colours
+    if roi_colours is None:
+        roi_colours = {'R1': '#1f77b4', 'R2': '#ff7f0e'}  # Default matplotlib colors
 
-    conditions = list(plot_data.keys())
+    # Stack and average explained variance
+    explained_var_R1 = np.mean(np.vstack(Results['R1']['expvar']), axis=0)
+    explained_var_R2 = np.mean(np.vstack(Results['R2']['expvar']), axis=0)
 
-    if plt_colors is None:
-        palette = sns.color_palette("Set2", len(conditions))
-        plt_colors = dict(zip(conditions, palette))
+    # Cumulative explained variance in %
+    cumsum_explained_var_R1 = np.cumsum(explained_var_R1) * 100
+    cumsum_explained_var_R2 = np.cumsum(explained_var_R2) * 100
 
-    # --- KDE plots ---
-    for cond in conditions:
-        values = np.asarray(plot_data[cond])
-        sns.kdeplot(
-            values,
-            ax=ax,
-            color=plt_colors[cond],
-            fill=True,
-            alpha=0.4,
-            linewidth=2,
-            label=cond,
-        )
-        ax.axvline(values.mean(), color=plt_colors[cond], linestyle="--")
+    # Compute SEM
+    sem_explained_var_R1 = np.std(np.vstack(Results['R1']['expvar']), axis=0) / np.sqrt(len(Results['R1']['expvar']))
+    sem_explained_var_R2 = np.std(np.vstack(Results['R2']['expvar']), axis=0) / np.sqrt(len(Results['R2']['expvar']))
 
-    if title:
-        ax.set_title(title, pad=10)
-    if xlabel:
-        ax.set_xlabel(xlabel)
-    if ylabel:
-        ax.set_ylabel(ylabel)
+    # Plot
+    ax.plot(cumsum_explained_var_R1[:n_dims], marker='o', markersize=5, color=roi_colours['R1'], label='R1')
+    ax.plot(cumsum_explained_var_R2[:n_dims], marker='o', markersize=5, color=roi_colours['R2'], label='R2')
 
-    # --- Boxplot inset ---
-    if bxplt:
-        df = pd.DataFrame({
-            "condition": np.concatenate([[c] * len(plot_data[c]) for c in conditions]),
-            "values": np.concatenate([plot_data[c] for c in conditions]),
-        })
+    # SEM shading
+    ax.fill_between(
+        np.arange(n_dims),
+        cumsum_explained_var_R1[:n_dims] - sem_explained_var_R1[:n_dims]*100,
+        cumsum_explained_var_R1[:n_dims] + sem_explained_var_R1[:n_dims]*100,
+        color=roi_colours['R1'], alpha=0.2
+    )
+    ax.fill_between(
+        np.arange(n_dims),
+        cumsum_explained_var_R2[:n_dims] - sem_explained_var_R2[:n_dims]*100,
+        cumsum_explained_var_R2[:n_dims] + sem_explained_var_R2[:n_dims]*100,
+        color=roi_colours['R2'], alpha=0.2
+    )
 
-        ax_box = ax.inset_axes([0, 1.05, 1, 0.2])
+    # Mean estimated dimensionality
+    ax.axvline(np.mean(dimsR1), color=roi_colours['R1'], linestyle='--', linewidth=1, label='Mean dim R1')
+    ax.axvline(np.mean(dimsR2), color=roi_colours['R2'], linestyle='--', linewidth=1, label='Mean dim R2')
 
-        sns.boxplot(
-            data=df,
-            x="values",
-            y="condition",
-            hue="condition",
-            orient="h",
-            palette=plt_colors,
-            showmeans=True,
-            meanprops={
-            "marker": "o",
-            "markerfacecolor": "white",
-            "markeredgecolor": "white",
-            "markersize": 6,
-            },
-            medianprops={
-            "visible": False
-            },
-            showfliers=False,   # hides outliers
-            legend=False,
-            ax=ax_box,
-        )
-
-        ax_box.set_xlim(ax.get_xlim())
-        ax_box.set_xlabel("")
-        ax_box.set_ylabel("")
-        ax_box.tick_params(labelbottom=False, bottom=False)
-        sns.despine(ax=ax_box)
-
-    # --- Legend ---
-    ax.legend(frameon=False, prop={"style": "italic"})
-
+    ax.set_ylabel('Cumulative Explained Variance [%]')
+    ax.set_xlabel('# Latent Dimensions') 
+    ax.legend(prop={'size': 9})  # smaller legend
     plt.tight_layout()
+    plt.show()
+    
     return fig
 
 # ---------------------------------------------------------------------
 # Communication subspace plotting
 # ---------------------------------------------------------------------
-def plot_xy_communication_subspace(XY_metrics, XY_numdims, xy_opt_dim, title='XY Communication Subspace'):
+def plot_xy_communication_subspace(XY_metrics, XY_numdims, xy_opt_dim, title=None):
     """
     Plots predictive performance with error bars and optimal dimensions (XY only).
 
     Args:
         XY_metrics (dict): Output from compute_performance() for XY.
-            Expected keys: 'mean_cv', 'sem_cv', 'performance_full', 'error_full'
+            Expected keys: 'mean_cv', 'sem_cv', 'sd_cv','performance_full', 'error_full'
         XY_numdims (np.ndarray or list): Tested number of predictive dimensions.
         xy_opt_dim (int): Optimal number of dimensions to indicate with vertical line.
         title (str, optional): Plot title.
@@ -223,7 +187,7 @@ def plot_xy_communication_subspace(XY_metrics, XY_numdims, xy_opt_dim, title='XY
     plt.errorbar(
         XY_numdims,
         1 - XY_metrics['mean_cv'],
-        yerr=XY_metrics['sem_cv'],
+        yerr=XY_metrics['sd_cv'],
         fmt='o-', markersize=4, capsize=2, color='#752D72',
         label='XY subspace'
     )
@@ -242,7 +206,8 @@ def plot_xy_communication_subspace(XY_metrics, XY_numdims, xy_opt_dim, title='XY
 
     plt.xlabel('Number of predictive dimensions')
     plt.ylabel('Predictive performance')
-    plt.title(title)
-    plt.legend()
+    if title:
+        plt.title(title)
+    plt.legend(prop={'size': 9})
     plt.tight_layout()
     plt.show()

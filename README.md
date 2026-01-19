@@ -11,7 +11,6 @@ Link to paper:
 ```bash
 ├── src/                # Core analysis code
 ├── scripts/            # Executable scripts to reproduce analyses
-├── docs/               # Additional docs
 ├── data/               # Data directory (see note below)
 ├── requirements.txt    # Python dependencies
 └── README.md

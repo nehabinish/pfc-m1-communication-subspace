@@ -54,7 +54,10 @@ class RRR:
         RegressFitandPredict: Fits a regression model to training data and predicts outcomes on test data.  
         model_select: Selects the optimal regression parameter (alpha) based on cross-validated loss.
     """     
-
+    
+    # --------------------------------------------
+    # Initialization
+    # --------------------------------------------
     def __init__(self, **kwargs):
         """
         Initializes the RRR class with input data and optional cross-validation splits.
@@ -107,6 +110,9 @@ class RRR:
             self.use_alpha = True
             self.subject_alpha = kwargs['subject_alpha']    
 
+    # --------------------------------------------
+    # Reduced Rank Regression main function
+    # --------------------------------------------
     def ReducedRankRegress(self, X, Y, dim, use_ridge_init=True, scale=False, verbose=False):
         """
         Performs Reduced Rank Regression (RRR) to find a low-dimensional mapping between
@@ -247,6 +253,9 @@ class RRR:
 
         return B, B_, V, Bfull, best_alpha
     
+    # --------------------------------------------
+    # Get Normalized Squared Error
+    # --------------------------------------------
     @staticmethod
     def normalized_squared_error(Ytest, Yhat):
         """
@@ -301,7 +310,9 @@ class RRR:
         
         return nse
 
-
+    # --------------------------------------------
+    # Compute Mean Squared Error
+    # --------------------------------------------
     @staticmethod
     def mean_squared_error(Ytest, Yhat):
         """
@@ -340,7 +351,9 @@ class RRR:
         
         return mse
 
-
+    # --------------------------------------------
+    # Predict using regression
+    # --------------------------------------------
     def RegressPredict(self, Y, X, B, noskip=True, verbose=False, **kwargs):
         """
         Computes the predicted target values (Yhat) using the learned regression coefficients (B)
@@ -400,6 +413,9 @@ class RRR:
         
         return loss, Yhat
     
+    # --------------------------------------------
+    # Get Ridge Regression
+    # --------------------------------------------
     @staticmethod
     def get_ridge_regress(Y, X, lambda_, scale=False):
         """
@@ -465,6 +481,9 @@ class RRR:
         
         return B
     
+    # --------------------------------------------
+    # Regress Fit and Predict
+    # --------------------------------------------
     def RegressFitAndPredict(self, regressFun, ndim, verbose=False, **kwargs):
 
         """
@@ -530,7 +549,10 @@ class RRR:
         if verbose:
             print('Regress Fit and Predict completed!')
         return loss, B, best_alpha
-
+    
+    # --------------------------------------------
+    # Model Selection
+    # --------------------------------------------
     @staticmethod
     def model_select(cv_loss, alpha, verbose=False):
         """
