@@ -18,13 +18,14 @@ import matplotlib.pyplot as plt
 # ---------------------------------------------------------------------
 # Apply custom matplotlib style 
 # ---------------------------------------------------------------------
-def apply_plot_style(style_path=None):
+def apply_plot_style(style_path=None, verbose=False):
     """
     Apply a custom matplotlib style from a .mplstyle file.
     Args:
         style_path (str or Path): Path to the .mplstyle file. If None,
                                   defaults to 'custom_plotstyle.mplstyle' 
                                   in the same directory as this script.
+        verbose (bool): If True, prints status messages.
     Returns:
         None
     """
@@ -44,7 +45,9 @@ def apply_plot_style(style_path=None):
         return
 
     plt.style.use(style_path)
-    print(f"[INFO] Loaded plot style: {style_path}")
+
+    if verbose:
+        print(f"[INFO] Loaded plot style: {style_path}")
 
 # ---------------------------------------------------------------------
 # Plot neural data
