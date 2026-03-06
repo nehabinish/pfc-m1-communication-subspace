@@ -18,7 +18,7 @@ Link to paper:
 
 ## Data Availability 
 
-"TBD"
+Source Data corresponding to all figures and Extended Data in the manuscript are provided with the publication. The data/ directory in this repository contains simulated data that can be used to run the example scripts in the scripts/ directory.
 
 ## Installation 
 
