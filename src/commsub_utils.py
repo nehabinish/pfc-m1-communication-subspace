@@ -5,7 +5,7 @@ Created: 11/10/2024
 
 Description:
 Utility script with different classes for finding a communication subspace between two 
-high-dimensional regions; source and target. 
+brain regions; source and target. 
 """
 
 # Imports for functionality
