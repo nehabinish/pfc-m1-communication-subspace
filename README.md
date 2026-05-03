@@ -1,10 +1,9 @@
 ## PFC-M1 Communication Subspace 
 
 This repository contains code for the following paper: 
-**" A Communication Subspace Relays Context-dependent Actions from Human Prefrontal to Motor Cortex "**
-*Neha Binish, Jonas Terlau, Jan Martini, Jack J. Lin , Robert T. Knight, Randolph F. Helfrich*, *Nature Neuroscience*, *2026*
+**Binish, N.**, Terlau, J., Martini, J. et al. **A communication subspace relays context-dependent actions from human prefrontal to motor cortex.** *Nat Neurosci (2026)*.
 
-Link to paper: 
+Link to paper: https://doi.org/10.1038/s41593-026-02290-4
 
 ## Repository Structure 
 
